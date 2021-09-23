@@ -1,25 +1,37 @@
 #ifndef CONSOLE_H
 #define CONSOLE_H
 
-#include <QPlainTextEdit>
+#include <QWidget>
+#include <QScrollBar>
+#include <QDateTime>
 
-class Console : public QPlainTextEdit
+namespace Ui {
+class Console;
+}
+
+class Console : public QWidget
 {
     Q_OBJECT
 
-signals:
-    void getData(const QByteArray &data);
-
 public:
     explicit Console(QWidget *parent = nullptr);
+    ~Console();
 
-    void putData(const QByteArray &data);
+    void inputData(const QString &data);
+    void outputData(const QString &data);
 
-protected:
-    void keyPressEvent(QKeyEvent *e) override;
-    void mousePressEvent(QMouseEvent *e) override;
-    void mouseDoubleClickEvent(QMouseEvent *e) override;
-    void contextMenuEvent(QContextMenuEvent *e) override;
+    void enableInput(bool state);
+
+signals:
+    void signalSendData(const QByteArray &data);
+
+private slots:
+    void slotSendData();
+
+private:
+    Ui::Console *ui;
+
+    void printText(const QString &str);
 };
 
 #endif // CONSOLE_H

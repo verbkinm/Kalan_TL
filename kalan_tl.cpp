@@ -11,7 +11,9 @@ Kalan_TL::Kalan_TL(QWidget *parent) :
 
     connect(ui->switchLed, &QPushButton::clicked, this, &Kalan_TL::slotSwitchLed);
     connect(ui->switchAutoRead, &QPushButton::clicked, this, &Kalan_TL::slotSwitchAutoRead);
+    connect(ui->console, &QPushButton::clicked, &_console, &Console::show);
 
+    connect(&_console, &Console::signalSendData, this, &Kalan_TL::slotWriteLine);
     connect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
 }
 
@@ -28,17 +30,23 @@ void Kalan_TL::panelEnable(bool state)
     ui->switchAutoRead->setEnabled(state);
     ui->filePath->setEnabled(!state);
     ui->openFile->setEnabled(!state);
+
+    _console.enableInput(state);
 }
 
 void Kalan_TL::slotConnect(const SettingsDialog::Settings &settings)
 {
     if(_serial.isOpen())
     {
-       _serial.close();
+        _serial.close();
         panelEnable(false);
+        emit signalDisconnected();
     }
     else if(_serial.openSerialPort(settings))
+    {
         panelEnable(true);
+        emit signalConnected();
+    }
 }
 
 void Kalan_TL::slotOpenFile()
@@ -53,36 +61,50 @@ void Kalan_TL::slotOpenFile()
 
 void Kalan_TL::slotSwitchLed()
 {
-    disconnect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
+    //    disconnect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
+
+    //    QString data = "led=" + QString::number(!ui->ledState->value()) + "\n";
+    //    _serial.write(data.toStdString().c_str());
+    //    _console.outputData(data);
+
+    //    QByteArray dataIn = _serial.readLine();
+
+    //    if( (dataIn.length() == 2) && (dataIn.at(1) == 1) )
+    //        ui->ledState->setValue(!ui->ledState->value());
+
+    //    connect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
 
     QString data = "led=" + QString::number(!ui->ledState->value()) + "\n";
     _serial.write(data.toStdString().c_str());
-
-    QByteArray dataIn = _serial.readLine();
-
-    if( (dataIn.length() == 2) && (dataIn.at(1) == 1) )
-        ui->ledState->setValue(!ui->ledState->value());
-
-    connect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
+    _console.outputData(data);
+    ui->ledState->setValue(!ui->ledState->value());
 }
 
 void Kalan_TL::slotSwitchAutoRead()
 {
-    disconnect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
+//    disconnect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
+
+//    QString data = "on=" + QString::number(!ui->autoReadState->value()) + "\n";
+//    _serial.write(data.toStdString().c_str());
+//    _console.outputData(data);
+
+//    QByteArray dataIn = _serial.readLine();
+
+//    if( (dataIn.length() == 2) && (dataIn.at(0) == 1))
+//        ui->autoReadState->setValue(!ui->autoReadState->value());
+
+//    connect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
 
     QString data = "on=" + QString::number(!ui->autoReadState->value()) + "\n";
     _serial.write(data.toStdString().c_str());
-
-    QByteArray dataIn = _serial.readLine();
-
-    if( (dataIn.length() == 2) && (dataIn.at(0) == 1))
-        ui->autoReadState->setValue(!ui->autoReadState->value());
-
-    connect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
+    _console.outputData(data);
+    ui->autoReadState->setValue(!ui->autoReadState->value());
 }
 
 void Kalan_TL::slotReadLine(const QByteArray &data)
 {
+    _console.inputData(data);
+
     std::array<float, 4> arr;
     int ledState;
 
@@ -91,7 +113,7 @@ void Kalan_TL::slotReadLine(const QByteArray &data)
 
     if(!dataStr.startsWith("DS18:") || strList.length() < 6)
     {
-        Log::write("Error data: " + dataStr, Log::Flags::WRITE_TO_FILE_AND_STDERR);
+        Log::write("Error input data: " + dataStr, Log::Flags::WRITE_TO_FILE_AND_STDERR);
         return;
     }
 
@@ -104,8 +126,15 @@ void Kalan_TL::slotReadLine(const QByteArray &data)
     ui->ledState->setValue(ledState);
 
     QDateTime dt = QDateTime::currentDateTime();
-    Log::write(dataStr, Log::Flags::WRITE_TO_FILE_ONLY, dt.toString("dd-MM-yyy") + ".txt");
+    Log::write(dataStr, Log::Flags::WRITE_TO_FILE_ONLY, dt.toString("yyyy-MM-dd") + ".txt");
+
 
     emit signalReadLine(dt, arr);
 }
+
+void Kalan_TL::slotWriteLine(const QByteArray &data)
+{
+    _serial.write(data);
+}
+
 

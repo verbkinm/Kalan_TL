@@ -44,7 +44,10 @@
       <item row="0" column="1">
        <widget class="QLineEdit" name="devicePath">
         <property name="text">
-         <string>/dev/ttyACM0</string>
+         <string>/dev/ttyUSB0</string>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -118,5 +121,22 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>devicePath</sender>
+   <signal>returnPressed()</signal>
+   <receiver>connect</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>400</x>
+     <y>60</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>254</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

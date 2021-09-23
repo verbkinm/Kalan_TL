@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include "terminal/serial.h"
+#include "terminal/console.h"
 #include "log.h"
 
 namespace Ui {
@@ -25,6 +26,7 @@ public:
 private:
     Ui::Kalan_TL *ui;
     Serial _serial;
+    Console _console;
 
     void openFile();
 
@@ -33,6 +35,9 @@ private:
 signals:
     void signalOpenFile(const QString &fileName);
     void signalReadLine(const QDateTime &dt, const std::array<float, 4> &arr);
+
+    void signalConnected();
+    void signalDisconnected();
 
 public slots:
     void slotConnect(const SettingsDialog::Settings &settings);
@@ -44,6 +49,7 @@ private slots:
     void slotSwitchAutoRead();
 
     void slotReadLine(const QByteArray &data);
+    void slotWriteLine(const QByteArray &data);
 };
 
 #endif // KALAN_TL_H

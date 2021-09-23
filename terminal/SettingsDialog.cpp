@@ -28,6 +28,18 @@ SettingsDialog::Settings SettingsDialog::settings() const
     return _currentSettings;
 }
 
+void SettingsDialog::slotConnected()
+{
+    panelEnable(false);
+    _ui->connect->setText("Disconnect");
+}
+
+void SettingsDialog::slotDisconneced()
+{
+    panelEnable(true);
+    _ui->connect->setText("Connect");
+}
+
 void SettingsDialog::slotConnect()
 {
     updateSettings();
@@ -66,10 +78,21 @@ void SettingsDialog::fillPortsParameters()
 
 void SettingsDialog::updateSettings()
 {
+    _currentSettings.name = _ui->devicePath->text();
     _currentSettings.baudRate = static_cast<QSerialPort::BaudRate>(_ui->baudRateBox->itemData(_ui->baudRateBox->currentIndex()).toInt());
     _currentSettings.dataBits = static_cast<QSerialPort::DataBits>(_ui->dataBitsBox->itemData(_ui->dataBitsBox->currentIndex()).toInt());
     _currentSettings.parity = static_cast<QSerialPort::Parity>(_ui->parityBox->itemData(_ui->parityBox->currentIndex()).toInt());
     _currentSettings.stopBits = static_cast<QSerialPort::StopBits>(_ui->stopBitsBox->itemData(_ui->stopBitsBox->currentIndex()).toInt());
     _currentSettings.flowControl = static_cast<QSerialPort::FlowControl>(_ui->flowControlBox->itemData(_ui->flowControlBox->currentIndex()).toInt());
+}
+
+void SettingsDialog::panelEnable(bool state)
+{
+    _ui->devicePath->setEnabled(state);
+    _ui->baudRateBox->setEnabled(state);
+    _ui->dataBitsBox->setEnabled(state);
+    _ui->parityBox->setEnabled(state);
+    _ui->stopBitsBox->setEnabled(state);
+    _ui->flowControlBox->setEnabled(state);
 }
 

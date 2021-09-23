@@ -35,12 +35,17 @@ public:
 signals:
     void signalConnect(const Settings &settings);
 
+public slots:
+    void slotConnected();
+    void slotDisconneced();
+
 private slots:
     void slotConnect();
 
 private:
     void fillPortsParameters();
     void updateSettings();
+    void panelEnable(bool state);
 
     Ui::SettingsDialog *_ui = nullptr;
     Settings _currentSettings;

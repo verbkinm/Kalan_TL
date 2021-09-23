@@ -113,14 +113,14 @@ void CentralWidget::openFile(const QString &fileName)
         QString buffStr = file.readLine();
         QStringList strList = buffStr.split(' ');
 
-        if(strList.length() != 7)
+        if(strList.length() != 9)
             continue;
 
         int day, month, year;
         buffStr = strList.at(0);
-        day = buffStr.split('.').at(0).toInt();
-        month = buffStr.split('.').at(1).toInt();
-        year = buffStr.split('.').at(2).toInt();
+        day = buffStr.split('-').at(2).toInt();
+        month = buffStr.split('-').at(1).toInt();
+        year = buffStr.split('-').at(0).toInt();
 
         int h, m, s;
         buffStr = strList.at(1);
@@ -129,10 +129,10 @@ void CentralWidget::openFile(const QString &fileName)
         s = buffStr.split(':').at(2).toInt();
 
         float t1, t2, t3, t4;
-        t1 = strList.at(2).toFloat();
-        t2 = strList.at(3).toFloat();
-        t3 = strList.at(4).toFloat();
-        t4 = strList.at(5).toFloat();
+        t1 = strList.at(4).toFloat();
+        t2 = strList.at(5).toFloat();
+        t3 = strList.at(6).toFloat();
+        t4 = strList.at(7).toFloat();
 
         QDateTime dt(QDate(year, month, day), QTime(h, m, s));
 
@@ -166,15 +166,18 @@ void CentralWidget::addPoints(const QDateTime &dt, const std::array<float, 4> &a
 
     if(_rangeX.min() > dt)
         _rangeX.setMin(dt);
-    else if(_rangeX.max() < dt)
+    if(_rangeX.max() < dt)
         _rangeX.setMax(dt);
 
-    float min = *std::min(arr.begin(), arr.end());
-    float max = *std::max(arr.begin(), arr.end());
+    std::array<float, 4> sortArr = arr;
+    std::sort(sortArr.begin(), sortArr.end());
+
+    float min = *sortArr.begin();
+    float max = *sortArr.rbegin();
 
     if(_rangeY.min() > min)
         _rangeY.setMin(min);
-    else if(_rangeY.max() < max)
+    if(_rangeY.max() < max)
         _rangeY.setMax(max);
 
     setChartViewXYRange();
@@ -242,12 +245,12 @@ void CentralWidget::fillSeriesAndSetRanges(const std::map<QDateTime, float> &map
 
         if(x < _rangeX.min())
             _rangeX.setMin(x);
-        else if(x > _rangeX.max())
+        if(x > _rangeX.max())
             _rangeX.setMax(x);
 
         if(y < _rangeY.min())
             _rangeY.setMin(y);
-        else if(y > _rangeY.max())
+        if(y > _rangeY.max())
             _rangeY.setMax(y);
     }
 }
@@ -379,7 +382,7 @@ void CentralWidget::slotDoubleClick()
 
 void CentralWidget::closeEvent(QCloseEvent*)
 {
-    emit signalCloseWindow(this);
+    exit(0);
 }
 
 void CentralWidget::slotSetTcickCountX(int value)

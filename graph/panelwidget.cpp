@@ -46,6 +46,8 @@ PanelWidget::PanelWidget(QWidget *parent) :
     connect(ui->kalan_tl, &Kalan_TL::signalOpenFile, this, &PanelWidget::signalOpenFile);
     connect(ui->kalan_tl, &Kalan_TL::signalReadLine, this, &PanelWidget::signalReadLine);
 
+    connect(ui->kalan_tl, &Kalan_TL::signalConnected, ui->settingsDialog, &SettingsDialog::slotConnected);
+    connect(ui->kalan_tl, &Kalan_TL::signalDisconnected, ui->settingsDialog, &SettingsDialog::slotDisconneced);
 }
 
 PanelWidget::~PanelWidget()

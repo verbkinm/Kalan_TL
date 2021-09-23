@@ -1,53 +1,47 @@
 #include "console.h"
-
-#include <QScrollBar>
+#include "ui_console.h"
 
 Console::Console(QWidget *parent) :
-    QPlainTextEdit(parent)
+    QWidget(parent),
+    ui(new Ui::Console)
 {
-    document()->setMaximumBlockCount(100);
-    QPalette p = palette();
-    p.setColor(QPalette::Base, Qt::black);
-    p.setColor(QPalette::Text, Qt::green);
-    setPalette(p);
+    ui->setupUi(this);
+
+    connect(ui->send, &QPushButton::clicked, this, &Console::slotSendData);
+
+    setWindowFlags(Qt::WindowStaysOnTopHint);
 }
 
-void Console::putData(const QByteArray &data)
+Console::~Console()
 {
-    insertPlainText(data);
-
-    QScrollBar *bar = verticalScrollBar();
-    bar->setValue(bar->maximum());
+    delete ui;
 }
 
-void Console::keyPressEvent(QKeyEvent *e)
+void Console::inputData(const QString &data)
 {
-    switch (e->key())
-    {
-    case Qt::Key_Backspace:
-    case Qt::Key_Left:
-    case Qt::Key_Right:
-    case Qt::Key_Up:
-    case Qt::Key_Down:
-        break;
-    default:
-        QPlainTextEdit::keyPressEvent(e);
-        emit getData(e->text().toLocal8Bit());
-    }
+    printText(" << "  + data);
 }
 
-void Console::mousePressEvent(QMouseEvent *e)
+void Console::outputData(const QString &data)
 {
-    Q_UNUSED(e)
-    setFocus();
+    printText(" >> " + data);
 }
 
-void Console::mouseDoubleClickEvent(QMouseEvent *e)
+void Console::enableInput(bool state)
 {
-    Q_UNUSED(e)
+    ui->dataToSend->setEnabled(state);
+    ui->send->setEnabled(state);
 }
 
-void Console::contextMenuEvent(QContextMenuEvent *e)
+void Console::slotSendData()
 {
-    Q_UNUSED(e)
+    QString data = ui->dataToSend->text();
+    printText(" >> "  + data + "\n");
+
+    emit signalSendData(data.toStdString().c_str());
+}
+
+void Console::printText(const QString &str)
+{
+    ui->text->appendPlainText(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + str);
 }

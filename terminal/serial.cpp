@@ -26,7 +26,7 @@ bool Serial::openSerialPort(const SettingsDialog::Settings &settings)
 
 void Serial::handleError(QSerialPort::SerialPortError error)
 {
-    if (error == QSerialPort::ResourceError)
+    if (error == QSerialPort::ResourceError || error == QSerialPort::ReadError)
     {
         QMessageBox::critical(nullptr, tr("Critical Error"), errorString());
         close();

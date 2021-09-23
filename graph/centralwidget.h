@@ -94,9 +94,6 @@ private slots:
 
 protected:
     virtual void closeEvent(QCloseEvent *);
-
-signals:
-    void signalCloseWindow(QObject *);
 };
 
 #endif // CENTRALWIDGET_H

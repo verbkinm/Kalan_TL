@@ -40,4 +40,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 FORMS += \
     graph/panelwidget.ui \
     kalan_tl.ui \
-    terminal/SettingsDialog.ui
+    terminal/SettingsDialog.ui \
+    terminal/console.ui
