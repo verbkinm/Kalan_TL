@@ -34,6 +34,7 @@ public:
     void removeAllSeries();
 
     bool isAutoZoom() const;
+    bool isSeriesToolTip() const;
 
 private:
     Ui::PanelWidget *ui;
@@ -68,6 +69,8 @@ signals:
 
     void signalOpenFile(const QString &fileName);
     void signalReadLine(const QDateTime &dt, const std::array<float, 4> &arr);
+
+    void signalSeriesRecreated();
 
 private slots:
     void slotSetSeriesPropery(int value);

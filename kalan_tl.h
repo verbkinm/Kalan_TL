@@ -4,8 +4,7 @@
 #include <QWidget>
 #include <QFileDialog>
 #include <QFile>
-#include <fstream>
-#include <iostream>
+#include <QTimer>
 
 #include "terminal/serial.h"
 #include "terminal/console.h"
@@ -27,6 +26,7 @@ private:
     Ui::Kalan_TL *ui;
     Serial _serial;
     Console _console;
+    QTimer _timer;
 
     void openFile();
 
@@ -41,6 +41,7 @@ signals:
 
 public slots:
     void slotConnect(const SettingsDialog::Settings &settings);
+    void slotPortError();
 
 private slots:
     void slotOpenFile();
@@ -50,6 +51,15 @@ private slots:
 
     void slotReadLine(const QByteArray &data);
     void slotWriteLine(const QByteArray &data);
+
+    void slotConsoleShow();
+
+    void slotAutoReadChanged(int value);
+    void slotTimerOut();
+
+    // QWidget interface
+protected:
+    virtual void hideEvent(QHideEvent *event) override;
 };
 
 #endif // KALAN_TL_H

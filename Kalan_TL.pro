@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    graph/callout.cpp \
     graph/centralwidget.cpp \
     graph/chart.cpp \
     graph/chartview.cpp \
@@ -21,6 +22,7 @@ SOURCES += \
     terminal/serial.cpp
 
 HEADERS += \
+    graph/callout.h \
     graph/centralwidget.h \
     graph/chart.h \
     graph/chartview.h \

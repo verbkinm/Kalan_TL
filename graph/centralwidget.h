@@ -20,6 +20,7 @@
 #include "panelwidget.h"
 #include "range.h"
 #include "log.h"
+#include "callout.h"
 
 QT_CHARTS_USE_NAMESPACE
 
@@ -58,6 +59,7 @@ private:
 
     QMenu _menuFile, _menuView;
 
+    Callout _tooltip;
 
     void addSeries(const std::map<QDateTime, float> &map, QXYSeries::SeriesType type = QXYSeries::SeriesTypeLine,
                    QString legendTitle = "Title");
@@ -92,8 +94,8 @@ private slots:
 
     void slotDoubleClick();
 
-protected:
-    virtual void closeEvent(QCloseEvent *);
+    void slotTooltip(QPointF point, bool state);
+    void slotSeriesRecreated();
 };
 
 #endif // CENTRALWIDGET_H

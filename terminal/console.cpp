@@ -36,12 +36,23 @@ void Console::enableInput(bool state)
 void Console::slotSendData()
 {
     QString data = ui->dataToSend->text();
-    printText(" >> "  + data + "\n");
+    printText(" >> "  + data);
 
+    data += "\n";
     emit signalSendData(data.toStdString().c_str());
 }
 
 void Console::printText(const QString &str)
 {
-    ui->text->appendPlainText(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + str);
+    if(!isVisible())
+        return;
+
+    QString buff = str;
+    ui->text->appendPlainText(QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss") + buff.remove("\n"));
+}
+
+void Console::closeEvent(QCloseEvent *event)
+{
+    Q_UNUSED(event)
+    ui->text->clear();
 }

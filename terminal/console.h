@@ -32,6 +32,10 @@ private:
     Ui::Console *ui;
 
     void printText(const QString &str);
+
+    // QWidget interface
+protected:
+    virtual void closeEvent(QCloseEvent *event) override;
 };
 
 #endif // CONSOLE_H

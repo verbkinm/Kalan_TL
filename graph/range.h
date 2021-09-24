@@ -34,6 +34,12 @@ public:
         return _min;
     }
 
+    void reset()
+    {
+        _min = std::numeric_limits<T>::max();
+        _max = std::numeric_limits<T>::min();
+    }
+
 private:
     T _min;
     T _max;

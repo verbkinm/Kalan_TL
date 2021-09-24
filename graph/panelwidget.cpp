@@ -52,8 +52,8 @@ PanelWidget::PanelWidget(QWidget *parent) :
 
 PanelWidget::~PanelWidget()
 {
-    delete ui;
     removeAllSeries();
+    delete ui;
 }
 
 void PanelWidget::addSeriesInList(QXYSeries *series)
@@ -94,6 +94,8 @@ void PanelWidget::recreateSeries(int numberSeries, int seriesType)
     series->attachAxis(chart->axes(Qt::Vertical).at(0));
 
     ui->seriesList->addItem(series->name());
+
+    emit signalSeriesRecreated();
 }
 
 QXYSeries *PanelWidget::newSeries(int seriesType)
@@ -285,4 +287,9 @@ void PanelWidget::removeAllSeries()
 bool PanelWidget::isAutoZoom() const
 {
     return ui->autoZoom->isChecked();
+}
+
+bool PanelWidget::isSeriesToolTip() const
+{
+    return ui->toolTip->isChecked();
 }

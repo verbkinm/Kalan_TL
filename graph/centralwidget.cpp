@@ -12,11 +12,10 @@
 #define FONT_SIZE 18
 
 CentralWidget::CentralWidget(QWidget *parent) : QMainWindow(parent),
-    _pAxisX(nullptr), _pAxisY(nullptr)
+    _pAxisX(nullptr), _pAxisY(nullptr), _tooltip(&_chart)
 {
     _rangeX.setMin(QDateTime(QDate(3000, 1, 1), QTime(0, 0, 0)));
 
-    _panelWidget.setParent(this);
     createMenu();
     statusBar()->insertWidget(0, &_statusBarWidget);
 
@@ -46,6 +45,7 @@ CentralWidget::CentralWidget(QWidget *parent) : QMainWindow(parent),
 
     connect(&_panelWidget, &PanelWidget::signalOpenFile, this, &CentralWidget::openFile);
     connect(&_panelWidget, &PanelWidget::signalReadLine, this, &CentralWidget::addPoints);
+    connect(&_panelWidget, &PanelWidget::signalSeriesRecreated, this, &CentralWidget::slotSeriesRecreated);
 
     openFile(QDate::currentDate().toString("yyyy-MM-dd") + ".txt");
 }
@@ -72,6 +72,8 @@ void CentralWidget::addSeries(const std::map<QDateTime, float> &map, QXYSeries::
     _chartView.slotResetZoomAndPosition();
 
     _panelWidget.addSeriesInList(series);
+
+    connect(series, &QXYSeries::hovered, this, &CentralWidget::slotTooltip);
 }
 
 void CentralWidget::addSeries(std::map<QDateTime, float> &map, QString legendTitle)
@@ -145,6 +147,10 @@ void CentralWidget::openFile(const QString &fileName)
 
     _panelWidget.removeAllSeries();
 
+    _rangeX.reset();
+    _rangeX.setMin(QDateTime(QDate(3000, 1, 1), QTime(0, 0, 0)));
+    _rangeY.reset();
+
     addSeries(map_t1, "T1");
     addSeries(map_t2, "T2");
     addSeries(map_t3, "T3");
@@ -195,6 +201,7 @@ void CentralWidget::createMenu()
 {
     _menuFile.setTitle("File");
     _menuFile.addAction(QIcon(":/save_as"), "save as BMP", this, SLOT(slotSaveBMP()));
+    _menuFile.addAction(QIcon(":/exit"), "Exit", this, SLOT(close()));
 
     _menuView.setTitle("View");
     _menuView.addAction(QIcon(":/reset"), "Reset zoom and position (Esc)", this, SLOT(slotResetZoomAndPosition()));
@@ -381,9 +388,34 @@ void CentralWidget::slotDoubleClick()
     _panelWidget.setVisible(!_panelWidget.isVisible());
 }
 
-void CentralWidget::closeEvent(QCloseEvent*)
+void CentralWidget::slotTooltip(QPointF point, bool state)
 {
-    exit(0);
+    if(!_panelWidget.isSeriesToolTip())
+        return;
+
+    if (state)
+    {
+        QDateTime dt;
+        dt.setMSecsSinceEpoch(point.x());
+        _tooltip.setText(QString("Date: %1 \nTemperature: %2 ").arg(dt.toString("yyyy-MM-dd hh:mm:ss")).arg(point.y()));
+        _tooltip.setAnchor(point);
+        _tooltip.setZValue(11);
+        _tooltip.updateGeometry();
+        _tooltip.show();
+    }
+    else
+    {
+        _tooltip.hide();
+    }
+}
+
+void CentralWidget::slotSeriesRecreated()
+{
+    for(const auto &it : _chart.series())
+    {
+        QXYSeries *series = qobject_cast<QXYSeries*>(it);
+        connect(series, &QXYSeries::hovered, this, &CentralWidget::slotTooltip);
+    }
 }
 
 void CentralWidget::slotSetTcickCountX(int value)

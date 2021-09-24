@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include <QSerialPort>
+#include <QSettings>
+#include <QFileInfo>
 
 QT_BEGIN_NAMESPACE
 
@@ -47,8 +49,13 @@ private:
     void updateSettings();
     void panelEnable(bool state);
 
-    Ui::SettingsDialog *_ui = nullptr;
+    void checkSettingsFileExist();
+    void readSettings();
+    void saveSettings();
+
+    Ui::SettingsDialog *ui = nullptr;
     Settings _currentSettings;
+    QSettings _settings;
 };
 
 #endif // SETTINGSDIALOG_H

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>502</width>
-    <height>365</height>
+    <width>318</width>
+    <height>316</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -25,11 +25,11 @@
   <property name="autoFillBackground">
    <bool>false</bool>
   </property>
-  <layout class="QGridLayout" name="gridLayout_3">
+  <layout class="QVBoxLayout" name="verticalLayout">
    <property name="sizeConstraint">
     <enum>QLayout::SetDefaultConstraint</enum>
    </property>
-   <item row="0" column="0">
+   <item>
     <widget class="QGroupBox" name="parametersBox">
      <property name="sizePolicy">
       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
@@ -40,14 +40,20 @@
      <property name="title">
       <string>Port settings:</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="devicePath">
-        <property name="text">
-         <string>/dev/ttyUSB0</string>
-        </property>
-        <property name="clearButtonEnabled">
-         <bool>true</bool>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
+      </property>
+      <item row="5" column="1">
+       <widget class="QComboBox" name="flowControlBox">
+        <property name="sizeAdjustPolicy">
+         <enum>QComboBox::AdjustToContentsOnFirstShow</enum>
         </property>
        </widget>
       </item>
@@ -58,50 +64,20 @@
         </property>
        </widget>
       </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="dataBitsLabel">
+      <item row="3" column="0">
+       <widget class="QLabel" name="parityLabel">
         <property name="text">
-         <string>Data bits:</string>
+         <string>Parity:</string>
         </property>
        </widget>
       </item>
       <item row="4" column="1">
        <widget class="QComboBox" name="stopBitsBox"/>
       </item>
-      <item row="1" column="1">
-       <widget class="QComboBox" name="baudRateBox"/>
-      </item>
-      <item row="5" column="1">
-       <widget class="QComboBox" name="flowControlBox"/>
-      </item>
-      <item row="3" column="1">
-       <widget class="QComboBox" name="parityBox"/>
-      </item>
-      <item row="5" column="0">
-       <widget class="QLabel" name="flowControlLabel">
-        <property name="text">
-         <string>Flow control:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <widget class="QLabel" name="stopBitsLabel">
-        <property name="text">
-         <string>Stop bits:</string>
-        </property>
-       </widget>
-      </item>
       <item row="6" column="1">
        <widget class="QPushButton" name="connect">
         <property name="text">
          <string>Connect</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="0">
-       <widget class="QLabel" name="parityLabel">
-        <property name="text">
-         <string>Parity:</string>
         </property>
        </widget>
       </item>
@@ -114,6 +90,43 @@
       </item>
       <item row="2" column="1">
        <widget class="QComboBox" name="dataBitsBox"/>
+      </item>
+      <item row="5" column="0">
+       <widget class="QLabel" name="flowControlLabel">
+        <property name="text">
+         <string>Flow control:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="devicePath">
+        <property name="text">
+         <string>/dev/ttyUSB0</string>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="stopBitsLabel">
+        <property name="text">
+         <string>Stop bits:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="dataBitsLabel">
+        <property name="text">
+         <string>Data bits:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QComboBox" name="parityBox"/>
+      </item>
+      <item row="1" column="1">
+       <widget class="QComboBox" name="baudRateBox"/>
       </item>
      </layout>
     </widget>
