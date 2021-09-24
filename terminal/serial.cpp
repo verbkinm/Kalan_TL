@@ -35,6 +35,19 @@ void Serial::handleError(QSerialPort::SerialPortError error)
 
 void Serial::slotRead()
 {
-    QByteArray data = readLine();
-    emit signalReadLine(data);
+    static QByteArray data;
+    QByteArray buffer;
+
+    data += readAll();
+
+    if(!data.contains('\n'))
+        return;
+    else
+    {
+        auto index = data.indexOf('\n');
+        buffer = data.mid(0, index + 1);
+        data = data.mid(index + 1);
+    }
+
+    emit signalReadLine(buffer);
 }

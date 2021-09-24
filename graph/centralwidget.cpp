@@ -182,7 +182,8 @@ void CentralWidget::addPoints(const QDateTime &dt, const std::array<float, 4> &a
 
     setChartViewXYRange();
 
-    slotResetZoomAndPosition();
+    if(_panelWidget.isAutoZoom())
+        slotResetZoomAndPosition();
 }
 
 QString CentralWidget::getTitle() const

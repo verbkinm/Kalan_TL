@@ -281,3 +281,8 @@ void PanelWidget::removeAllSeries()
     _seriesList.clear();
     ui->seriesList->clear();
 }
+
+bool PanelWidget::isAutoZoom() const
+{
+    return ui->autoZoom->isChecked();
+}

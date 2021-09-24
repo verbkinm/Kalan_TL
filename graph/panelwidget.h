@@ -33,6 +33,8 @@ public:
 
     void removeAllSeries();
 
+    bool isAutoZoom() const;
+
 private:
     Ui::PanelWidget *ui;
 

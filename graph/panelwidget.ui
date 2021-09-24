@@ -31,6 +31,19 @@
         <widget class="SettingsDialog" name="settingsDialog" native="true"/>
        </item>
        <item>
+        <spacer name="horizontalSpacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item>
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -181,6 +194,13 @@
           <string>View:</string>
          </property>
          <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="1">
+           <widget class="QCheckBox" name="antialiasing">
+            <property name="text">
+             <string>Antialiasing</string>
+            </property>
+           </widget>
+          </item>
           <item row="0" column="0">
            <widget class="QCheckBox" name="animation">
             <property name="text">
@@ -188,10 +208,13 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1">
-           <widget class="QCheckBox" name="antialiasing">
+          <item row="0" column="2">
+           <widget class="QCheckBox" name="autoZoom">
             <property name="text">
-             <string>Antialiasing</string>
+             <string>Auto zoom</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>
