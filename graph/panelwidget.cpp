@@ -13,7 +13,8 @@
 PanelWidget::PanelWidget(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::PanelWidget),
-    _currentSeries(nullptr)
+    _currentSeries(nullptr),
+    _settings(QSettings::IniFormat, QSettings::UserScope, "VMS", "Kalan_TL")
 {
     ui->setupUi(this);
 
@@ -32,8 +33,10 @@ PanelWidget::PanelWidget(QWidget *parent) :
     connect(ui->themeComboBox, SIGNAL(currentIndexChanged(int)), SIGNAL(signalChangeTheme(int)));
     connect(ui->pointVisible, SIGNAL(toggled(bool)), SLOT(slotSetPointVisible(bool)));
     connect(ui->legendPosition, SIGNAL(currentIndexChanged(int)), SIGNAL(signalSetLegendPosition(int)));
+
     connect(ui->animation, SIGNAL(toggled(bool)), SIGNAL(signalAnimation(bool)));
     connect(ui->antialiasing, SIGNAL(toggled(bool)), SIGNAL(signalAntialiasing(bool)));
+
     connect(ui->seriesList, SIGNAL(currentIndexChanged(int)), SLOT(slotSetSeriesPropery(int)));
     connect(ui->colorSelect, SIGNAL(clicked()), SLOT(slotSetSeriesColor()));
     connect(ui->seriesType, SIGNAL(currentIndexChanged(int)), SLOT(slotSetSeriesType(int)));
@@ -42,12 +45,19 @@ PanelWidget::PanelWidget(QWidget *parent) :
     connect(ui->tickCountY, SIGNAL(valueChanged(int)), SIGNAL(signalTickCountChangeY(int)));
     connect(ui->penWidth, SIGNAL(valueChanged(int)), SLOT(slotSetSeriesPenWidth(int)));
 
+    connect(ui->animation, &QCheckBox::toggled, this, &PanelWidget::slotSettingsChanged);
+    connect(ui->antialiasing, &QCheckBox::toggled, this, &PanelWidget::slotSettingsChanged);
+    connect(ui->toolTip, &QCheckBox::toggled, this, &PanelWidget::slotSettingsChanged);
+    connect(ui->autoZoom, &QCheckBox::toggled, this, &PanelWidget::slotSettingsChanged);
+
     connect(ui->settingsDialog, &SettingsDialog::signalConnect, ui->kalan_tl, &Kalan_TL::slotConnect);
-    connect(ui->kalan_tl, &Kalan_TL::signalOpenFile, this, &PanelWidget::signalOpenFile);
     connect(ui->kalan_tl, &Kalan_TL::signalReadLine, this, &PanelWidget::signalReadLine);
 
     connect(ui->kalan_tl, &Kalan_TL::signalConnected, ui->settingsDialog, &SettingsDialog::slotConnected);
     connect(ui->kalan_tl, &Kalan_TL::signalDisconnected, ui->settingsDialog, &SettingsDialog::slotDisconneced);
+
+    checkSettingsFileExist();
+    readSettings();
 }
 
 PanelWidget::~PanelWidget()
@@ -123,6 +133,40 @@ void PanelWidget::setDisableUnits(bool value)
 {
     ui->tab_series->setDisabled(value);
     ui->seriesType->setDisabled(value);
+}
+
+void PanelWidget::checkSettingsFileExist()
+{
+    if(!QFileInfo::exists(_settings.fileName()))
+    {
+        _settings.beginGroup("Chart");
+        _settings.setValue("Animation", false);
+        _settings.setValue("Antialiasing", false);
+        _settings.setValue("AutoZoom", false);
+        _settings.setValue("ToolTip", false);
+        _settings.endGroup();
+        _settings.sync();
+    }
+}
+
+void PanelWidget::readSettings()
+{
+    _settings.beginGroup("Chart");
+//!!!    ui->animation->setChecked(_settings.value("Animation").toBool());
+//!!!    ui->antialiasing->setChecked(_settings.value("Antialiasing").toBool());
+//!!!    ui->autoZoom->setChecked(_settings.value("AutoZoom").toBool());
+//!!!    ui->toolTip->setChecked(_settings.value("ToolTip").toBool());
+    _settings.endGroup();
+}
+
+void PanelWidget::saveSettings()
+{
+    _settings.beginGroup("Chart");
+    _settings.setValue("Animation", ui->animation->isChecked());
+    _settings.setValue("Antialiasing", ui->antialiasing->isChecked());
+    _settings.setValue("AutoZoom", ui->autoZoom->isChecked());
+    _settings.setValue("ToolTip", ui->toolTip->isChecked());
+    _settings.endGroup();
 }
 
 int PanelWidget::getSeriesType()
@@ -263,6 +307,16 @@ void PanelWidget::slotAxisYRangeChanged()
     emit signalAxisYRangeChanged(ui->axisYRangeMin->value(), ui->axisYRangeMax->value());
 }
 
+void PanelWidget::slotSettingsChanged()
+{
+    saveSettings();
+
+//    emit signalAnimation(ui->animation->isChecked());
+//    emit signalAnimation(ui->antialiasing->isChecked());
+//    emit signalAnimation(ui->autoZoom->isChecked());
+//    emit signalAnimation(ui->toolTip->isChecked());
+}
+
 void PanelWidget::setRangeAxisX(QDateTime min, QDateTime max)
 {
     ui->axisXRangeMin->setDateTime(min);
@@ -292,4 +346,9 @@ bool PanelWidget::isAutoZoom() const
 bool PanelWidget::isSeriesToolTip() const
 {
     return ui->toolTip->isChecked();
+}
+
+void PanelWidget::slotConsoleShow()
+{
+    ui->kalan_tl->slotConsoleShow();
 }

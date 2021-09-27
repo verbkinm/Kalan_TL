@@ -597,15 +597,29 @@
  <tabstops>
   <tabstop>tabWidget</tabstop>
   <tabstop>themeComboBox</tabstop>
+  <tabstop>seriesType</tabstop>
+  <tabstop>legendPosition</tabstop>
   <tabstop>animation</tabstop>
+  <tabstop>antialiasing</tabstop>
+  <tabstop>autoZoom</tabstop>
+  <tabstop>toolTip</tabstop>
   <tabstop>tickCountX</tabstop>
+  <tabstop>spinBoxTickX</tabstop>
   <tabstop>tickCountY</tabstop>
+  <tabstop>spinBoxTickY</tabstop>
+  <tabstop>rubberModeRectangle</tabstop>
+  <tabstop>rubberModeHorizontal</tabstop>
+  <tabstop>rubberModeVertical</tabstop>
+  <tabstop>axisXRangeMin</tabstop>
+  <tabstop>axisXRangeMax</tabstop>
+  <tabstop>axisYRangeMin</tabstop>
+  <tabstop>axisYRangeMax</tabstop>
   <tabstop>seriesList</tabstop>
   <tabstop>colorSelect</tabstop>
   <tabstop>pointVisible</tabstop>
   <tabstop>hide</tabstop>
-  <tabstop>spinBoxTickX</tabstop>
-  <tabstop>spinBoxTickY</tabstop>
+  <tabstop>penWidth</tabstop>
+  <tabstop>spinBoxPenWidth</tabstop>
  </tabstops>
  <resources/>
  <connections>

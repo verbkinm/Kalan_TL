@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>Console</string>
   </property>
+  <property name="windowIcon">
+   <iconset resource="../img.qrc">
+    <normaloff>:/terminal</normaloff>:/terminal</iconset>
+  </property>
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QLineEdit" name="dataToSend">
@@ -49,7 +53,7 @@
    <item row="2" column="1">
     <widget class="QPushButton" name="clear">
      <property name="text">
-      <string>clear</string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -59,7 +63,7 @@
       <bool>false</bool>
      </property>
      <property name="text">
-      <string>send</string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -71,7 +75,9 @@
   <tabstop>text</tabstop>
   <tabstop>clear</tabstop>
  </tabstops>
- <resources/>
+ <resources>
+  <include location="../img.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>dataToSend</sender>

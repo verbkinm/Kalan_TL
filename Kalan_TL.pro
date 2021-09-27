@@ -15,6 +15,7 @@ SOURCES += \
     graph/chartview.cpp \
     graph/panelwidget.cpp \
     kalan_tl.cpp \
+    led.cpp \
     log.cpp \
     main.cpp \
     terminal/SettingsDialog.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     graph/panelwidget.h \
     graph/range.h \
     kalan_tl.h \
+    led.h \
     log.h \
     terminal/SettingsDialog.h \
     terminal/console.h \
@@ -44,3 +46,6 @@ FORMS += \
     kalan_tl.ui \
     terminal/SettingsDialog.ui \
     terminal/console.ui
+
+RESOURCES += \
+    img.qrc

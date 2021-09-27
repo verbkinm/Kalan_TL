@@ -11,10 +11,15 @@
 
 #define FONT_SIZE 18
 
+static QString _programVersion = "1.0";
+
 CentralWidget::CentralWidget(QWidget *parent) : QMainWindow(parent),
     _pAxisX(nullptr), _pAxisY(nullptr), _tooltip(&_chart)
 {
     _rangeX.setMin(QDateTime(QDate(3000, 1, 1), QTime(0, 0, 0)));
+
+    setWindowIcon(QIcon(":/logo"));
+    setWindowTitle("Kalan_TL " + _programVersion);
 
     createMenu();
     statusBar()->insertWidget(0, &_statusBarWidget);
@@ -43,7 +48,6 @@ CentralWidget::CentralWidget(QWidget *parent) : QMainWindow(parent),
     connect(_pAxisX, SIGNAL(rangeChanged(QDateTime, QDateTime)), this, SLOT(slotRangeXChanged(QDateTime, QDateTime)));
     connect(_pAxisY, SIGNAL(rangeChanged(qreal, qreal)), this, SLOT(slotRangeYChanged(qreal, qreal)));
 
-    connect(&_panelWidget, &PanelWidget::signalOpenFile, this, &CentralWidget::openFile);
     connect(&_panelWidget, &PanelWidget::signalReadLine, this, &CentralWidget::addPoints);
     connect(&_panelWidget, &PanelWidget::signalSeriesRecreated, this, &CentralWidget::slotSeriesRecreated);
 
@@ -199,16 +203,29 @@ QString CentralWidget::getTitle() const
 
 void CentralWidget::createMenu()
 {
-    _menuFile.setTitle("File");
-    _menuFile.addAction(QIcon(":/save_as"), "save as BMP", this, SLOT(slotSaveBMP()));
-    _menuFile.addAction(QIcon(":/exit"), "Exit", this, SLOT(close()));
+    _menuFile.setTitle("&File");
+    _menuFile.addAction(QIcon(":/open"), "Open", this, SLOT(slotOpenFile()), Qt::CTRL + Qt::Key_O);
+    _menuFile.addAction(QIcon(":/image"), "Save as BMP", this, SLOT(slotSaveBMP()), Qt::CTRL + Qt::Key_S);
+    _menuFile.addSeparator();
+    _menuFile.addAction(QIcon(":/exit"), "Exit", this, SLOT(close()), Qt::CTRL + Qt::Key_Q);
 
-    _menuView.setTitle("View");
-    _menuView.addAction(QIcon(":/reset"), "Reset zoom and position (Esc)", this, SLOT(slotResetZoomAndPosition()));
-    _menuView.addAction(QIcon(":/"), "Hide/visible right panel (chart 2xClick)", this, SLOT(slotDoubleClick()));
+    _menuView.setTitle("&View");
+    _menuView.addAction(QIcon(":/reset"), "Reset zoom and position", this, SLOT(slotResetZoomAndPosition()), Qt::Key_Escape);
+    _menuView.addAction(QIcon(":/hide"), "Hide/visible panel", this, SLOT(slotDoubleClick()), Qt::CTRL + Qt::Key_P);
+    _menuView.addAction(QIcon(":/fullScreen"), "Full screen", this, SLOT(slotFullScreen()), Qt::Key_F11);
 
-    this->menuBar()->addMenu(&_menuFile);
-    this->menuBar()->addMenu(&_menuView);
+    _menuTool.setTitle("&Tools");
+    _menuTool.addAction(QIcon(":/terminal"), "Terminal", &_panelWidget, SLOT(slotConsoleShow()), Qt::CTRL + Qt::Key_K);
+
+    _menuAbout.setTitle("&About");
+    _menuAbout.addAction(QIcon(":/author"), "Author", this, SLOT(slotAuthor()));
+    _menuAbout.addAction(QIcon(":/aboutQt"), "About Qt", QApplication::instance(), SLOT(aboutQt()));
+
+    menuBar()->addMenu(&_menuFile);
+    menuBar()->addMenu(&_menuView);
+    menuBar()->addMenu(&_menuTool);
+    menuBar()->addMenu(&_menuAbout);
+
 }
 
 void CentralWidget::connectPanelWidgetSignals()
@@ -388,6 +405,14 @@ void CentralWidget::slotDoubleClick()
     _panelWidget.setVisible(!_panelWidget.isVisible());
 }
 
+void CentralWidget::slotFullScreen()
+{
+    if(isFullScreen())
+        showMaximized();
+    else
+        showFullScreen();
+}
+
 void CentralWidget::slotTooltip(QPointF point, bool state)
 {
     if(!_panelWidget.isSeriesToolTip())
@@ -416,6 +441,23 @@ void CentralWidget::slotSeriesRecreated()
         QXYSeries *series = qobject_cast<QXYSeries*>(it);
         connect(series, &QXYSeries::hovered, this, &CentralWidget::slotTooltip);
     }
+}
+
+void CentralWidget::slotOpenFile()
+{
+    QString result = QFileDialog::getOpenFileName(this, "Select file", QDir::homePath(), "TXT(*.txt)");
+    if(!result.isEmpty())
+        openFile(result);
+}
+
+void CentralWidget::slotAuthor()
+{
+    QString text = "<h3>Kalan_TL " + _programVersion + "</h3> <br>"
+                                                         "Author: Verbkin Mikhail <br>"
+                                                         "Email: <a href=\"mailto:verbkinm@yandex.ru\" >verbkinm@yandex.ru</a> <br>"
+                                                         "Source code: <a href='https://github.com/verbkinm/Kalan_TL'>github.com</a> <br><br>"
+                                                         "The program for my dear friend! =))";
+    QMessageBox::about(this, "Author", text);
 }
 
 void CentralWidget::slotSetTcickCountX(int value)

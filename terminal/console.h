@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QScrollBar>
 #include <QDateTime>
+#include <QCommonStyle>
 
 namespace Ui {
 class Console;
@@ -36,6 +37,7 @@ private:
     // QWidget interface
 protected:
     virtual void closeEvent(QCloseEvent *event) override;
+    virtual void keyReleaseEvent(QKeyEvent *event) override;
 };
 
 #endif // CONSOLE_H

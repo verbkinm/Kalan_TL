@@ -33,7 +33,6 @@ private:
     void panelEnable(bool state);
 
 signals:
-    void signalOpenFile(const QString &fileName);
     void signalReadLine(const QDateTime &dt, const std::array<float, 4> &arr);
 
     void signalConnected();
@@ -42,17 +41,14 @@ signals:
 public slots:
     void slotConnect(const SettingsDialog::Settings &settings);
     void slotPortError();
+    void slotConsoleShow();
 
 private slots:
-    void slotOpenFile();
-
     void slotSwitchLed();
     void slotSwitchAutoRead();
 
     void slotReadLine(const QByteArray &data);
     void slotWriteLine(const QByteArray &data);
-
-    void slotConsoleShow();
 
     void slotAutoReadChanged(int value);
     void slotTimerOut();

@@ -10,6 +10,10 @@ Console::Console(QWidget *parent) :
     connect(ui->send, &QPushButton::clicked, this, &Console::slotSendData);
 
     setWindowFlags(Qt::WindowStaysOnTopHint);
+
+    QCommonStyle style;
+    ui->send->setIcon(style.standardIcon(QStyle::SP_ArrowRight));
+    ui->clear->setIcon(style.standardIcon(QStyle::SP_LineEditClearButton));
 }
 
 Console::~Console()
@@ -55,4 +59,10 @@ void Console::closeEvent(QCloseEvent *event)
 {
     Q_UNUSED(event)
     ui->text->clear();
+}
+
+void Console::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Escape)
+        close();
 }

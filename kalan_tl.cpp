@@ -9,11 +9,8 @@ Kalan_TL::Kalan_TL(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->openFile, &QPushButton::clicked, this, &Kalan_TL::slotOpenFile);
-
     connect(ui->switchLed, &QPushButton::clicked, this, &Kalan_TL::slotSwitchLed);
     connect(ui->switchAutoRead, &QPushButton::clicked, this, &Kalan_TL::slotSwitchAutoRead);
-    connect(ui->console, &QPushButton::clicked, this, &Kalan_TL::slotConsoleShow);
 
     connect(&_console, &Console::signalSendData, this, &Kalan_TL::slotWriteLine);
     connect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
@@ -33,12 +30,8 @@ Kalan_TL::~Kalan_TL()
 
 void Kalan_TL::panelEnable(bool state)
 {
-    ui->ledState->setEnabled(state);
-    ui->autoReadState->setEnabled(state);
     ui->switchLed->setEnabled(state);
     ui->switchAutoRead->setEnabled(state);
-    ui->filePath->setEnabled(!state);
-    ui->openFile->setEnabled(!state);
 
     _console.enableInput(state);
 }
@@ -71,16 +64,6 @@ void Kalan_TL::slotPortError()
     ui->autoReadState->setValue(0);
 
     emit signalDisconnected();
-}
-
-void Kalan_TL::slotOpenFile()
-{
-    QString result = QFileDialog::getOpenFileName(this, "Select file", QDir::homePath(), "TXT(*.txt)");
-    if(!result.isEmpty())
-    {
-        ui->filePath->setText(result);
-        emit signalOpenFile(result);
-    }
 }
 
 void Kalan_TL::slotSwitchLed()

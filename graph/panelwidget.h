@@ -8,6 +8,7 @@
 #include <QSlider>
 #include <QVXYModelMapper>
 #include <QDateTime>
+#include <QSettings>
 
 #include <QtCharts/QChartView>
 
@@ -43,10 +44,16 @@ private:
 
     QXYSeries* _currentSeries;
 
+    QSettings _settings;
+
     void recreateSeries(int numberSeries, int seriesType);
     QXYSeries *newSeries(int seriesType);
     //отключение всех необходимых элементов, если список графов пуст!
     void setDisableUnits(bool value);
+
+    void checkSettingsFileExist();
+    void readSettings();
+    void saveSettings();
 
 signals:
     void signalChangeTheme(int);
@@ -67,10 +74,12 @@ signals:
 
     void signalSeriesTypeChanged();
 
-    void signalOpenFile(const QString &fileName);
     void signalReadLine(const QDateTime &dt, const std::array<float, 4> &arr);
 
     void signalSeriesRecreated();
+
+public slots:
+    void slotConsoleShow();
 
 private slots:
     void slotSetSeriesPropery(int value);
@@ -85,6 +94,8 @@ private slots:
 
     void slotAxisXRangeChanged();
     void slotAxisYRangeChanged();
+
+    void slotSettingsChanged();
 };
 
 #endif // PANELWIDGET_H

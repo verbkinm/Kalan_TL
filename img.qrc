@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="exit">img/application-exit.png</file>
+        <file alias="logo">img/atom.png</file>
+        <file alias="connect">img/connect.png</file>
+        <file alias="disconnect">img/disconnect.png</file>
+        <file alias="image">img/image.png</file>
+        <file alias="aboutQt">img/qt_logo.png</file>
+        <file alias="reset">img/reset.png</file>
+        <file alias="terminal">img/terminal.png</file>
+        <file alias="hide">img/hide.png</file>
+        <file alias="open">img/open.png</file>
+        <file alias="fullScreen">img/fullScreen.png</file>
+        <file alias="author">img/author.png</file>
+    </qresource>
+</RCC>

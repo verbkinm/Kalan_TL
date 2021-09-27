@@ -13,7 +13,6 @@
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QMessageBox>
-#include <array>
 
 #include "chart.h"
 #include "chartview.h"
@@ -57,7 +56,7 @@ private:
     Range<QDateTime> _rangeX;
     Range<float> _rangeY;
 
-    QMenu _menuFile, _menuView;
+    QMenu _menuFile, _menuView, _menuTool, _menuAbout;
 
     Callout _tooltip;
 
@@ -93,9 +92,13 @@ private slots:
     void slotRangeYSet(qreal, qreal);
 
     void slotDoubleClick();
+    void slotFullScreen();
 
     void slotTooltip(QPointF point, bool state);
     void slotSeriesRecreated();
+
+    void slotOpenFile();
+    void slotAuthor();
 };
 
 #endif // CENTRALWIDGET_H
