@@ -20,6 +20,8 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
 
     checkSettingsFileExist();
     readSettings();
+
+    ui->connect->setValue(0);
 }
 
 SettingsDialog::~SettingsDialog()
@@ -36,12 +38,14 @@ void SettingsDialog::slotConnected()
 {
     panelEnable(false);
     ui->connect->setText("Disconnect");
+    ui->connect->setValue(1);
 }
 
 void SettingsDialog::slotDisconneced()
 {
     panelEnable(true);
     ui->connect->setText("Connect");
+    ui->connect->setValue(0);
 }
 
 void SettingsDialog::slotConnect()

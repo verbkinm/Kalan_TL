@@ -19,6 +19,7 @@ SOURCES += \
     log.cpp \
     main.cpp \
     terminal/SettingsDialog.cpp \
+    buttoncolor.cpp \
     terminal/console.cpp \
     terminal/serial.cpp
 
@@ -33,6 +34,7 @@ HEADERS += \
     led.h \
     log.h \
     terminal/SettingsDialog.h \
+    buttoncolor.h \
     terminal/console.h \
     terminal/serial.h
 

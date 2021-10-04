@@ -1,7 +1,7 @@
 #include "kalan_tl.h"
 #include "ui_kalan_tl.h"
 
-#define AUTOREAD_INTERVAL 20000
+#define AUTOREAD_INTERVAL 15000
 
 Kalan_TL::Kalan_TL(QWidget *parent) :
     QWidget(parent),
@@ -16,11 +16,14 @@ Kalan_TL::Kalan_TL(QWidget *parent) :
     connect(&_serial, &Serial::signalReadLine, this, &Kalan_TL::slotReadLine);
     connect(&_serial, &Serial::signalPortError, this, &Kalan_TL::slotPortError);
 
-    connect(ui->autoReadState, SIGNAL(valueChanged(int)), this, SLOT(slotAutoReadChanged(int)));
+    connect(ui->switchAutoRead, SIGNAL(valueChanged(int)), this, SLOT(slotAutoReadChanged(int)));
 
     connect(&_timer, &QTimer::timeout, this, &Kalan_TL::slotTimerOut);
 
     _timer.setInterval(AUTOREAD_INTERVAL);
+
+    ui->switchLed->setValue(0);
+    ui->switchAutoRead->setValue(0);
 }
 
 Kalan_TL::~Kalan_TL()
@@ -43,8 +46,8 @@ void Kalan_TL::slotConnect(const SettingsDialog::Settings &settings)
         _serial.closeSerialPort();
         panelEnable(false);
 
-        ui->ledState->setValue(0);
-        ui->autoReadState->setValue(0);
+        ui->switchLed->setValue(0);
+        ui->switchAutoRead->setValue(0);
 
         emit signalDisconnected();
     }
@@ -60,28 +63,40 @@ void Kalan_TL::slotPortError()
     _serial.closeSerialPort();
     panelEnable(false);
 
-    ui->ledState->setValue(0);
-    ui->autoReadState->setValue(0);
+    ui->switchLed->setValue(0);
+    ui->switchAutoRead->setValue(0);
 
     emit signalDisconnected();
 }
 
 void Kalan_TL::slotSwitchLed()
 {
-    QString data = "led=" + QString::number(!ui->ledState->value()) + "\n";
+    int value = !ui->switchLed->value();
+
+    QString data = "led=" + QString::number(value) + "\n";
     _serial.write(data.toStdString().c_str());
     _console.outputData(data);
-    ui->ledState->setValue(!ui->ledState->value());
+    ui->switchLed->setValue(value);
     Log::write("Output data: " + data.remove("\n"));
+
+    if(ui->switchAutoRead->value() == 0)
+        ui->switchLed->timerStart();
 }
 
 void Kalan_TL::slotSwitchAutoRead()
 {
-    QString data = "on=" + QString::number(!ui->autoReadState->value()) + "\n";
+    int value = !ui->switchAutoRead->value();
+
+    QString data = "on=" + QString::number(value) + "\n";
     _serial.write(data.toStdString().c_str());
     _console.outputData(data);
-    ui->autoReadState->setValue(!ui->autoReadState->value());
+    ui->switchAutoRead->setValue(value);
     Log::write("Output data: " + data.remove("\n"));
+
+    if(value)
+        ui->switchLed->timerStop();
+    else
+        ui->switchLed->timerStart();
 }
 
 void Kalan_TL::slotReadLine(const QByteArray &data)
@@ -103,9 +118,9 @@ void Kalan_TL::slotReadLine(const QByteArray &data)
         arr[3] = strList.at(4).toFloat();
         ledState = strList.at(5).toInt();
 
-        ui->autoReadState->setValue(1);
+        ui->switchAutoRead->setValue(1);
         slotAutoReadChanged(1);
-        ui->ledState->setValue(ledState);
+        ui->switchLed->setValue(ledState);
 
         QDateTime dt = QDateTime::currentDateTime();
         Log::write(dataStr.remove("\n"), Log::Flags::WRITE_TO_FILE_ONLY, dt.toString("yyyy-MM-dd") + ".txt");
@@ -131,14 +146,21 @@ void Kalan_TL::slotConsoleShow()
 void Kalan_TL::slotAutoReadChanged(int value)
 {
     if(value == 1)
+    {
         _timer.start();
+        ui->switchLed->timerStop();
+    }
     else
+    {
         _timer.stop();
+        ui->switchLed->timerStart();
+    }
 }
 
 void Kalan_TL::slotTimerOut()
 {
-    ui->autoReadState->setValue(0);
+    ui->switchAutoRead->setValue(0);
+    ui->switchLed->timerStart();
 }
 
 void Kalan_TL::hideEvent(QHideEvent *event)

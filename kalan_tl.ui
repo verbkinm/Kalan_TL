@@ -17,58 +17,47 @@
    <item>
     <widget class="QGroupBox" name="groupBox_6">
      <property name="title">
-      <string>Kalan_TL:</string>
+      <string>Kalan_TL commands:</string>
      </property>
-     <layout class="QGridLayout" name="gridLayout_8" rowstretch="0,0" columnstretch="0,0,0">
-      <item row="1" column="1">
-       <widget class="Led" name="autoReadState" native="true"/>
-      </item>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_10">
-        <property name="text">
-         <string>Autoread state:</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="switchAutoRead">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>switch</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="switchLed">
-        <property name="enabled">
-         <bool>false</bool>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>60</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>switch</string>
-        </property>
-       </widget>
-      </item>
+     <layout class="QGridLayout" name="gridLayout_8" rowstretch="0" columnstretch="0,0">
       <item row="0" column="1">
-       <widget class="Led" name="ledState" native="true"/>
+       <widget class="ButtonColor" name="switchAutoRead">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="text">
+         <string>Auto read</string>
+        </property>
+       </widget>
       </item>
       <item row="0" column="0">
-       <widget class="QLabel" name="label_9">
+       <widget class="ButtonColor" name="switchLed">
+        <property name="enabled">
+         <bool>false</bool>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>100</width>
+          <height>16777215</height>
+         </size>
+        </property>
         <property name="text">
-         <string>LED state:</string>
+         <string>LED</string>
+        </property>
+        <property name="autoDefault">
+         <bool>false</bool>
+        </property>
+        <property name="default">
+         <bool>false</bool>
+        </property>
+        <property name="flat">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -79,15 +68,13 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Led</class>
-   <extends>QWidget</extends>
-   <header>led.h</header>
-   <container>1</container>
+   <class>ButtonColor</class>
+   <extends>QPushButton</extends>
+   <header>buttoncolor.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>switchLed</tabstop>
-  <tabstop>switchAutoRead</tabstop>
  </tabstops>
  <resources/>
  <connections/>

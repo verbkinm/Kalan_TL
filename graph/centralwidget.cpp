@@ -457,7 +457,7 @@ void CentralWidget::slotAuthor()
                                                          "Email: <a href=\"mailto:verbkinm@yandex.ru\" >verbkinm@yandex.ru</a> <br>"
                                                          "Source code: <a href='https://github.com/verbkinm/Kalan_TL'>github.com</a> <br><br>"
                                                          "The program for my dear friend! =))";
-    QMessageBox::about(this, "Author", text);
+    QMessageBox::about(nullptr, "Author", text);
 }
 
 void CentralWidget::slotSetTcickCountX(int value)
